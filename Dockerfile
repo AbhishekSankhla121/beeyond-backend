@@ -17,9 +17,6 @@ COPY . .
 RUN groupadd -g 1001 backend \
  && useradd -u 1001 -g backend -m -s /bin/bash backend
 
-# Change ownership
-RUN chown -R backend:backend /app
-
 # Switch to non-root user
 USER backend
 
