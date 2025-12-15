@@ -19,12 +19,7 @@ const Port = process.env.PORT || 5000
 ConnectToDataBase(ConnectionStringURL)
 
 // use middlewares 
-app.use(express.urlencoded(
-    {
-        extended:true
-    }
-))
-app.use(express.json())
+
 // set cors policy
 app.use(cors({
     origin: origins, 
