@@ -42,7 +42,7 @@ userSchema.methods.getJWTToken = function () {
 }
 
 userSchema.methods.comparePassword = async function (password) {
-    console.log(this.password)
+    console.log("User modal pass",this.password)
     return await bcrypt.compare(password, this.password)
 }
 

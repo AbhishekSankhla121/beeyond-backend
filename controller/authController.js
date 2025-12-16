@@ -19,3 +19,14 @@ export const createUser =catchAsyncError( async (req,res,next)=>{
     });
    sendToken(res,user,"Register Successfully",201)
 })
+
+export const loginUser = catchAsyncError(async(req,res,next)=>{
+  const{email,password} = req.body
+  console.log('login',email,password)
+  if(!email || !password) return next(new ErrorHandler("please enter all fields",400));
+  const user = User.findOne({email}).select('+password');
+  if(!user) return next(new ErrorHandler("User not exist!",401));
+  const isMatch = await user.comparePassword(password)
+  if(!isMatch) return next(new ErrorHandler('invalid credential in login',401))
+  res.status(200).send("loged in ")
+})
