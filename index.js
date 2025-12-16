@@ -32,7 +32,6 @@ export const io = initSocket(server);
 // application working on 
 app.listen(Port,()=>{
     console.log(`Express + Socket running on port:${Port}`)
-    console.log(`check health: http://localhost:${Port}/health`)
 })
 
 app.use(ErrorMiddleware);
