@@ -1,6 +1,6 @@
 import express from 'express'
 import cookieParser from "cookie-parser"
-
+import cors from "cors"
 import userRoutes from "./routes/userRoutes.js"
 import deliveryRoutes from "./routes/deliveryRoutes.js"
 import adminRoutes from './routes/adminRoutes.js'
@@ -17,6 +17,12 @@ app.use(express.urlencoded(
 ))
 app.use(express.json())
 app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:3000", 
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true
+}));
+
 // to check the backend application health 
 app.use("/health",healthRoutes)
 

@@ -30,3 +30,18 @@ export const loginUser = catchAsyncError(async(req,res,next)=>{
   if(!isMatch) return next(new ErrorHandler('invalid credential in login',401))
   sendToken(res,user,`welcome back ,${user.name}`,201)
 })
+
+export const logout = catchAsyncError(async (req, res, next) => {
+    const options = {
+        expires: new Date(Date.now()),
+        httpOnly: true, 
+        secure: false, 
+        sameSite: "none", 
+    }
+
+    //    clearing the auth-token from cookies
+    res.status(200).cookie("token", null, options).json({
+        success: true,
+        message: "logout successfully"
+    })
+});
