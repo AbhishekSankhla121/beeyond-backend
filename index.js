@@ -2,9 +2,10 @@
 import {config} from "dotenv"
 import { app } from "./app.js"
 import cors from "cors"
-import express from 'express'
 import { ErrorMiddleware } from "./middleware/Error.js"
 import { ConnectToDataBase } from "./config/databaseConnection.js"
+import http from "http";
+import { initSocket } from "./socket.js"
 
 // load env
 config({
@@ -19,7 +20,7 @@ const Port = process.env.PORT || 5000
 ConnectToDataBase(ConnectionStringURL)
 
 // use middlewares 
-
+const server = http.createServer(app);
 // set cors policy
 app.use(cors({
     origin: origins, 
@@ -27,9 +28,10 @@ app.use(cors({
     credentials: true
 }));
 
+export const io = initSocket(server);
 // application working on 
 app.listen(Port,()=>{
-    console.log(`backend application is working on port:${Port}`)
+    console.log(`Express + Socket running on port:${Port}`)
     console.log(`check health: http://localhost:${Port}/health`)
 })
 
