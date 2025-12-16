@@ -2,6 +2,7 @@ import { catchAsyncError } from "../middleware/catchAsyncError.js";
 import ErrorHandler from '../utils/errorHandler.js'
 import Product from '../models/product.js'
 import User from '../models/user.js'
+import Order from '../models/order.js'
 
 export const createProduct =catchAsyncError( async (req,res,next)=>{
     const {name,description,image,price,stock} = req.body
@@ -33,3 +34,12 @@ export const deliveryPartner = catchAsyncError(async (req, res, next) => {
     data
   });
 });
+
+export const getAllOrders = catchAsyncError(async (req,res,next)=>{
+  const data = await Order.find({})
+  return res.status(200).json({
+    success: true,
+    message: "All orders requested by Admin!",
+    data
+  });
+})
