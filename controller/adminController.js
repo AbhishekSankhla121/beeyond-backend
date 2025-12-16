@@ -43,3 +43,34 @@ export const getAllOrders = catchAsyncError(async (req,res,next)=>{
     data
   });
 })
+
+
+export const adminDashboard = catchAsyncError(async (req, res, next) => {
+  const totalOrders = await Order.countDocuments();
+  const liveOrders = await Order.countDocuments({
+    status: { $ne: "DELIVERED" }
+  });
+
+  const totalCustomers = await User.countDocuments({ role: "CUSTOMER" });
+  const totalDeliveryPartners = await User.countDocuments({ role: "DELIVERY" });
+
+  const ordersByStatus = await Order.aggregate([
+    {
+      $group: {
+        _id: "$status",
+        count: { $sum: 1 }
+      }
+    }
+  ]);
+
+  res.status(200).json({
+    success: true,
+    data: {
+      totalOrders,
+      liveOrders,
+      totalCustomers,
+      totalDeliveryPartners,
+      ordersByStatus
+    }
+  });
+});

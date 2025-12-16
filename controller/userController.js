@@ -62,8 +62,19 @@ export const placeOrder = catchAsyncError(async(req,res,next)=>{
 
 
 
-export const getMyOrder =catchAsyncError(async(req,res,next)=>{
+export const myOrders =catchAsyncError(async(req,res,next)=>{
     const data = await Order.find({customer: req.user._id})
+    return res.status(200).json({
+    success: true,
+    message: "fecth order successfully !",
+    data 
+})
+})
+
+export const getMyOrder=catchAsyncError(async(req,res,next)=>{
+    const { id } =req.params
+    if(!id) return next(new ErrorHandler('id not found',400))
+      const data = await Order.findOne({_id: id})
     return res.status(200).json({
     success: true,
     message: "fecth order successfully !",
