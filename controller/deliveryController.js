@@ -37,7 +37,7 @@ export const assignOrder = catchAsyncError(async(req,res,next)=>{
       new ErrorHandler("Order already assigned or not found", 400)
     );
   }
- 
+    
     return res.status(200).json({
     success: true,
     message: "Assign delivery order successfully !",
@@ -49,12 +49,38 @@ export const assignOrder = catchAsyncError(async(req,res,next)=>{
 export const updateOrderStatus= catchAsyncError(async(req,res,next)=>{
     const {id,status} = req.body
     console.log("assign order: order_id , status:",id,status)
-
-
+    const data = await Order.findOneAndUpdate(
+        { _id: id, 
+          isLocked:true
+        },
+        {
+        status
+        },
+        {
+            new:true
+        }
+     )
     
     return res.status(200).json({
     success: true,
     message: "update delivery order status successfully !",
-    // data 
+    data 
 })
 })
+
+
+export const myOrders =catchAsyncError(async(req,res,next)=>{
+    const data = await Order.find(
+      {
+        deliveryPartner: req.user._id
+      }
+    )
+    return res.status(200).json({
+    success: true,
+    message: "fecth delivery order successfully !",
+    data 
+})
+})
+
+
+

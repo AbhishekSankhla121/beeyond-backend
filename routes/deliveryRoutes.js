@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { assignOrder, getUnassignedOrder, updateOrderStatus } from '../controller/deliveryController.js';
+import { assignOrder, getUnassignedOrder, myOrders, updateOrderStatus } from '../controller/deliveryController.js';
 import { isAuthenticated } from '../middleware/auth.js';
 import { checkRole } from '../middleware/checkRole.js';
 
@@ -9,6 +9,8 @@ router.route('/order')
 .get(isAuthenticated,checkRole(["DELIVERY"]),getUnassignedOrder )
 .post(isAuthenticated,checkRole(["DELIVERY"]),assignOrder)
 .patch(isAuthenticated,checkRole(["DELIVERY"]),updateOrderStatus)
+
+router.route('/me').get(isAuthenticated,checkRole(["DELIVERY"]),myOrders)
 
 
 export default router  
