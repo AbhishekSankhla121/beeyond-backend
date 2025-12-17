@@ -4,16 +4,23 @@ export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
       origin: "http://localhost:3000",
-      methods: ["GET", "POST"],
       credentials: true,
     },
   });
 
   io.on("connection", (socket) => {
-    console.log("New socket connected:", socket.id);
+    console.log("Socket connected:", socket.id);
 
-    socket.on("joinDeliveryRoom", () => {
-      socket.join("delivery-partner");
+    socket.on("joinCustomerRoom", (customerId) => {
+      socket.join(`customer_${customerId}`);
+    });
+
+    socket.on("joinDeliveryRoom", (deliveryId) => {
+      socket.join(`delivery_${deliveryId}`);
+    });
+
+    socket.on("joinAdminRoom", () => {
+      socket.join("admins");
     });
 
     socket.on("disconnect", () => {

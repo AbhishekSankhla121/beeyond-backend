@@ -21,11 +21,12 @@ export const createUser =catchAsyncError( async (req,res,next)=>{
 })
 
 export const loginUser = catchAsyncError(async(req,res,next)=>{
-  const{email,password} = req.body
+  const{email,password,role} = req.body
   console.log('login',email,password)
-  if(!email || !password) return next(new ErrorHandler("please enter all fields",400));
+  if(!email || !password || !role) return next(new ErrorHandler("please enter all fields",400));
   const user = await User.findOne({email}).select('+password');
   if(!user) return next(new ErrorHandler("User not exist!",401));
+  if(role !== user.role ) return next(new ErrorHandler(`please try as ${user.role} login , currently you are using ${role} login`,401));
   const isMatch = await user.comparePassword(password)
   if(!isMatch) return next(new ErrorHandler('invalid credential in login',401))
   sendToken(res,user,`welcome back ,${user.name}`,201)
@@ -45,3 +46,12 @@ export const logout = catchAsyncError(async (req, res, next) => {
         message: "logout successfully"
     })
 });
+
+export const userInfo = catchAsyncError(async(req,res,next)=>{
+    const data = await User.findById({_id:req.user._id})
+      res.status(200).json({
+        success: true,
+        message: "fetch user profile Successfully",
+        data: data
+    })
+})

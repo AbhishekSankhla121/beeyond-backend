@@ -16,17 +16,15 @@ const ConnectionStringURL = process.env.DATABASE_CONNECTION_STRING ||"mongodb://
 
 const Port = process.env.PORT || 5000
 
-// connect to database
 ConnectToDataBase(ConnectionStringURL)
 
-// use middlewares 
-// const server = http.createServer(app);
-// set cors policy
+const server = http.createServer(app);
 
-// export const io = initSocket(server);
-// application working on 
-app.listen(Port,()=>{
-    console.log(`Express + Socket running on port:${Port}`)
-})
+
+export const io = initSocket(server);
+
+server.listen(Port, () => {
+  console.log(`Server + Socket.IO running on ${Port}`);
+});
 
 app.use(ErrorMiddleware);

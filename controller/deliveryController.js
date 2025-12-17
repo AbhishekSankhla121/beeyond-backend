@@ -1,3 +1,4 @@
+import { io } from "../index.js";
 import { catchAsyncError } from "../middleware/catchAsyncError.js";
 import Order from '../models/order.js'
 import ErrorHandler from "../utils/errorHandler.js";
@@ -37,7 +38,11 @@ export const assignOrder = catchAsyncError(async(req,res,next)=>{
       new ErrorHandler("Order already assigned or not found", 400)
     );
   }
-    
+
+    io.to(`customer_${data.customer}`).emit("orderUpdated", {data,message:"customer assignOrder"});
+    io.to(`delivery_${req.user._id}`).emit("orderUpdated", {data,message:"deliver assignOrder"});
+    io.to("admins").emit("orderUpdated", {data,message:"Admin assignOrder"});
+
     return res.status(200).json({
     success: true,
     message: "Assign delivery order successfully !",
@@ -60,12 +65,16 @@ export const updateOrderStatus= catchAsyncError(async(req,res,next)=>{
             new:true
         }
      )
-    
+    io.to(`customer_${data.customer}`).emit("orderUpdated", {data,message:"customer updateOrderStatus"});
+    io.to(`delivery_${req.user._id}`).emit("orderUpdated", {data,message:"deliver updateOrderStatus"});
+    io.to("admins").emit("orderUpdated", {data,message:"Admin updateOrderStatus"});
+
     return res.status(200).json({
     success: true,
     message: "update delivery order status successfully !",
     data 
 })
+
 })
 
 
