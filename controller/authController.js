@@ -37,7 +37,7 @@ export const logout = catchAsyncError(async (req, res, next) => {
         expires: new Date(Date.now()),
         httpOnly: true, 
         secure: false, 
-        sameSite: "none", 
+       sameSite: "lax"
     }
 
     //    clearing the auth-token from cookies
