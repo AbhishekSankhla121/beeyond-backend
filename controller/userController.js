@@ -2,7 +2,7 @@ import { catchAsyncError } from "../middleware/catchAsyncError.js";
 import Product from '../models/product.js'
 import ErrorHandler from "../utils/errorHandler.js";
 import Order from '../models/order.js'
-
+import { io } from "../index.js";
 export const getProduct =catchAsyncError( async (req,res,next)=>{
     const data = await Product.find({
         isAvailable: true,
@@ -52,6 +52,8 @@ export const placeOrder = catchAsyncError(async(req,res,next)=>{
     totalAmount,
     status: "PLACED"
   });
+    io.to(`delivery_product_placed`).emit("PlaceOrder", {data:order,message:"deliver assignOrder"});
+    io.to("admins").emit("PlaceOrder", {data:order,message:"Admin assignOrder"});
      return res.status(200).json({
     success: true,
     message: "order placed successfully !",
