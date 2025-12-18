@@ -39,9 +39,8 @@ export const assignOrder = catchAsyncError(async(req,res,next)=>{
     );
   }
 
-    io.to(`customer_${data.customer}`).emit("orderUpdated", {data,message:"customer assignOrder"});
-    io.to(`delivery_${req.user._id}`).emit("orderUpdated", {data,message:"deliver assignOrder"});
-    io.to("admins").emit("orderUpdated", {data,message:"Admin assignOrder"});
+
+    io.to("admins").emit("orderAccepted", {data,message:"Admin assignOrder"});
 
     return res.status(200).json({
     success: true,
@@ -66,7 +65,6 @@ export const updateOrderStatus= catchAsyncError(async(req,res,next)=>{
         }
      )
     io.to(`customer_${data.customer}`).emit("orderUpdated", {data,message:"customer updateOrderStatus"});
-    io.to(`delivery_${req.user._id}`).emit("orderUpdated", {data,message:"deliver updateOrderStatus"});
     io.to("admins").emit("orderUpdated", {data,message:"Admin updateOrderStatus"});
 
     return res.status(200).json({

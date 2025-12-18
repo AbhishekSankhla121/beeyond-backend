@@ -17,7 +17,6 @@ export const initSocket = (server) => {
 
     socket.on("joinDeliveryRoom", (deliveryId) => {
       socket.join(`delivery_${deliveryId}`);
-      socket.join(`delivery_product_placed`)
     });
 
     socket.on("joinAdminRoom", () => {

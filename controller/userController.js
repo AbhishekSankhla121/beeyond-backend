@@ -52,7 +52,6 @@ export const placeOrder = catchAsyncError(async(req,res,next)=>{
     totalAmount,
     status: "PLACED"
   });
-    io.to(`delivery_product_placed`).emit("PlaceOrder", {data:order,message:"deliver assignOrder"});
     io.to("admins").emit("PlaceOrder", {data:order,message:"Admin assignOrder"});
      return res.status(200).json({
     success: true,
