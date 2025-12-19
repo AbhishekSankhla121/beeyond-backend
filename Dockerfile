@@ -1,21 +1,32 @@
-# Use Node 22
-FROM node:22
+FROM node:22-alpine AS deps
 
-# Set working directory
+# Required for some native modules
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
-# Copy package.json first for caching
+# Copy dependency files 
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy all source code
+# Runtime stage
+FROM node:22-alpine AS runner
+
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy application source
 COPY . .
 
-# Create non-root user (Debian way)
-RUN groupadd -g 1001 backend \
- && useradd -u 1001 -g backend -m -s /bin/bash backend
+# Create non-root user
+RUN addgroup -g 1001 backend \
+ && adduser -D -u 1001 -G backend backend
 
 # Switch to non-root user
 USER backend
@@ -23,5 +34,5 @@ USER backend
 # Expose backend port
 EXPOSE 5000
 
-# Use nodemon for live reload
+# Start application
 CMD ["npx", "nodemon", "index.js"]
