@@ -6,6 +6,7 @@ import deliveryRoutes from "./routes/deliveryRoutes.js"
 import adminRoutes from './routes/adminRoutes.js'
 import healthRoutes from './routes/healthRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import {config} from "dotenv"
 
 export const app = express()
 config({

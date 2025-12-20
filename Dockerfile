@@ -1,38 +1,27 @@
 FROM node:22-alpine AS deps
 
-# Required for some native modules
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache git libc6-compat
 
-WORKDIR /app
-
-# Copy dependency files 
+WORKDIR /beeyond-backend
 COPY package*.json ./
 
-# Install dependencies
+# Install only production deps
 RUN npm ci
 
-# Runtime stage
 FROM node:22-alpine AS runner
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache git libc6-compat
 
-WORKDIR /app
+WORKDIR /beeyond-backend
 
-# Copy node_modules from deps stage
-COPY --from=deps /app/node_modules ./node_modules
-
-# Copy application source
+COPY --from=deps /beeyond-backend/node_modules ./node_modules
 COPY . .
 
-# Create non-root user
 RUN addgroup -g 1001 backend \
  && adduser -D -u 1001 -G backend backend
 
-# Switch to non-root user
 USER backend
 
-# Expose backend port
 EXPOSE 5000
 
-# Start application
-CMD ["npx", "nodemon", "index.js"]
+CMD ["node", "index.js"]
