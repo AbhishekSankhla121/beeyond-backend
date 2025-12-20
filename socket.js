@@ -1,9 +1,10 @@
 import { Server } from "socket.io";
+import { FrontendUrl } from "./app.js";
 
 export const initSocket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: FrontendUrl,
       credentials: true,
     },
   });

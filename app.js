@@ -8,7 +8,11 @@ import healthRoutes from './routes/healthRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 
 export const app = express()
+config({
+    path:".env"
+})
 
+export const FrontendUrl=process.env.FRONTEND_URL || "http://localhost:3000"
 const urlPrefix=`/api/v1`
 app.use(express.urlencoded(
     {
@@ -18,7 +22,7 @@ app.use(express.urlencoded(
 app.use(express.json())
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:3000", 
+    origin:FrontendUrl, 
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true
 }));
