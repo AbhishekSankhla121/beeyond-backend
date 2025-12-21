@@ -41,7 +41,7 @@ export const assignOrder = catchAsyncError(async(req,res,next)=>{
 
 
     io.to("admins").emit("orderAccepted", {data,message:"Admin assignOrder"});
-
+    io.to("admins").emit("orderUpdated", {data,message:"Admin updateOrderStatus"});
     return res.status(200).json({
     success: true,
     message: "Assign delivery order successfully !",
