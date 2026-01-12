@@ -16,6 +16,7 @@ WORKDIR /beeyond-backend
 
 COPY --from=deps /beeyond-backend/node_modules ./node_modules
 COPY . .
+RUN rm -f .env
 
 RUN addgroup -g 1001 backend \
  && adduser -D -u 1001 -G backend backend

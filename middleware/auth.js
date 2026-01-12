@@ -5,6 +5,7 @@ import User from '../models/user.js'
 
 
 export const isAuthenticated = catchAsyncError(async(req,res,next)=>{
+     console.log("Handled by pod:", process.env.HOSTNAME);
     const {token} = req.cookies;
     if (!token) return next(new ErrorHandler("isAuthenticated middleware token not found!", 401))
     const data = jwt.verify(token,process.env.JWT_SECRET)
